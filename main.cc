@@ -15,8 +15,11 @@ int main(int argc, char** argv){
 
     /* start your program */
     
+    nm->interpret("Graph.txt");
     
-    hello!
+    nm->print_all_e();
+    
+    nm->print_all_v();
     
 
     return 0;
