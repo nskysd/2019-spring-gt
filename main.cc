@@ -10,6 +10,9 @@
 
 using namespace std;
 
+
+int Eular_Path_Searching(NetworkManager* nm);
+
 // create NetworkManager first
 NetworkManager *nm = new NetworkManager();
 
@@ -29,6 +32,15 @@ int main(int argc, char** argv){
 
 
 
+
+
+
+
+
+
+
+    //Identify Odd Degree Vertex
+//////////////////////////////////////////////////////////////////////////////////////////////////////
     Vertex* node = nm->get_all_nodes();
     vector<Vertex*> node_list;
 
@@ -57,63 +69,54 @@ int main(int argc, char** argv){
             else
                 degree[i]=degree[i];
 
-    /*
+    
     for(int i = 0 ; i < Number_Of_Vertex ; i++)
         cout<<"Degree["<<i<<"]="<<degree[i]<<endl;
-    */
+//////////////////////////////////////////////////////////////////////////////////////////////////////    
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*
-    
-    Degree_a=(nm->connected("a" , "b"))+(nm->connected("a" , "c"));
-    
-    cout<<nm->connected("a" , "d");
-    
-    
-    
-    cout<<"Degree_a="<<Degree_a<<endl;
 
-    */
+
+
+
+
+    
+    //Eular
+//////////////////////////////////////////////////////////////////////////////////////////////////////    
+    nm->connect("b", "e");
+//////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
+    
+
+
+
+
+
+
+
+    
+    Eular_Path_Searching(nm);
     
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*
-    nm->print_all_e();
-    nm->print_all_v();
-    */
-    
-    
-    
+
     
     
 
     
 
     return 0;
+}
+
+
+
+int Eular_Path_Searching(NetworkManager* nm){
+    
+    nm->print_all_e();
+    nm->print_all_v();
+    
+    return 0;
+    
 }
