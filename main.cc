@@ -15,7 +15,7 @@ using namespace std;
 
 int Eular_Path_Searching(NetworkManager* nm , vector<Vertex*> node_list);
 int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_list , string vertex);
-
+int Vertex_Number_Getting(vector<Vertex*> node_list , string vertex);
 
 // create NetworkManager first
 NetworkManager *nm = new NetworkManager();
@@ -118,52 +118,95 @@ int main(int argc, char** argv){
 
 int Eular_Path_Searching(NetworkManager* nm , vector<Vertex*> node_list){
     
-    std::stack<std::string> vertex;
+    std::stack<std::string> Eular_Path;
+    std::stack<std::string> Temp_Eular_Path;
     
     nm->print_all_e();
     nm->print_all_v();
     
     
-    vertex.push(node_list[0]->name);
+    Temp_Eular_Path.push(node_list[0]->name);
    
-    cout<<vertex.top()<<endl;
-    
-    
-    
-    cout<<Accessible_Vertex_Identification( nm , node_list , node_list[0]->name ) << endl ;
-    
+   
     /*
+    cout<<vertex.top()<<endl;
+    */
+  
+    /*
+    cout << Accessible_Vertex_Identification( nm , node_list , node_list[0]->name ) << endl ;
+    cout << Vertex_Number_Getting( node_list , "a" ) << endl ;
+    */
+    
+    
+    
+    
+    
+    
+    
     int Number_Of_Vertex;
+    int Start_Vertex_Number;
     Number_Of_Vertex=node_list.size();
-    while(!vertex.empty()){
-    
-        if( Accessible_Vertex_Identification( nm , node_list , node_list[0]->name ) ){}
-    
-        else    
-            for( int i = 0 ; i < Number_Of_Vertex ; i++ )
-                if( ( ! ( nm->connected( node_list[0]->name , node_list[i]->name ) ) ) && ( ! (nm->connected_d( node_list[0]->name , node_list[i]->name ) ) ) )
-                    
-                    nm->disconnect( node_list[0]->name , node_list[i]->name );
-
-                else if( ( ! ( nm->connected( node_list[0]->name , node_list[i]->name ) ) ) && ( ! (nm->connected_d( node_list[i]->name , node_list[0]->name ) ) ) ){
-                    
-                    nm->disconnect( node_list[i]->name , node_list[0]->name );
-                    
-                    vertex.push(node_list[i]->name);
-                    
+    while(!Temp_Eular_Path.empty()) {
+        
+        Start_Vertex_Number = Vertex_Number_Getting( node_list , Temp_Eular_Path.top() );
+        
+        if( Accessible_Vertex_Identification( nm , node_list , node_list[Start_Vertex_Number]->name ) ) {
+            
+            Eular_Path.push(Temp_Eular_Path.top());
+            Temp_Eular_Path.pop();
+        
+        }
+        else {
+            for( int i = 0 ; i < Number_Of_Vertex ; i++ ) {
+                if( ! ( nm->connected_d( node_list[Start_Vertex_Number]->name , node_list[i]->name ) ) ) {
+                  
+                    nm->disconnect( node_list[Start_Vertex_Number]->name , node_list[i]->name );
+                    cout << "Vertex \""<<node_list[Start_Vertex_Number]->name<<"\" and Vertex \" "<<node_list[i]->name<<"\" is disconnected"<<endl;
+                    nm->print_all_e();
+                    Temp_Eular_Path.push( node_list[i]->name ) ;
                     break;
+                }    
+
+                else if( ! ( nm->connected_d( node_list[i]->name , node_list[Start_Vertex_Number]->name ) ) ) {
+                    
+                    nm->disconnect( node_list[i]->name , node_list[Start_Vertex_Number]->name );
+                    cout << "Vertex \""<<node_list[Start_Vertex_Number]->name<<"\" and Vertex \" "<<node_list[i]->name<<"\" is disconnected"<<endl;
+                    nm->print_all_e();
+                    Temp_Eular_Path.push( node_list[i]->name ) ;
+                    break;
+                }
+                
+            }
+                
+        }    
 
     }
-    */
     
     
-    /*
-    nm->disconnect( node_list[i]->name , node_list[0]->name );
-    */
+    
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
+        cout << Eular_Path.top()<<endl;
+        Eular_Path.pop();
     
     return 0;
     
 }
+
 
 int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_list , string vertex){
     
@@ -187,5 +230,14 @@ int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_l
     else
         return 1 ;
 
+}
+
+int Vertex_Number_Getting(vector<Vertex*> node_list , string vertex){
+    
+    int Vertex_Number = 0 ;
+    while(vertex != node_list[Vertex_Number]->name)
+        Vertex_Number++ ;
+
+    return Vertex_Number;
 }
 
