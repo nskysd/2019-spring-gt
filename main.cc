@@ -21,7 +21,7 @@ void Euler_Path_Searching(NetworkManager* nm , vector<Vertex*> node_list);
 int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_list , string vertex);
 int Vertex_Number_Getting(vector<Vertex*> node_list , string vertex);
 void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , vector<Vertex*> Odd_Degree_Vertex , int Number_Of_Odd_Degree_Vertex );
-int Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Odd_Degree_Vertex );
+void Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex );
 
 // create NetworkManager first
 NetworkManager *nm = new NetworkManager();
@@ -93,14 +93,18 @@ int main(int argc, char** argv){
     for(int i = 0 ; i < Number_Of_Odd_Degree_Vertex ; i++)
         cout<<"Vertex \""<<Odd_Degree_Vertex[i]->name<<"\" is odd degree Vertex."<<endl;
         
-    /*
+
+    for( int i = 0 ; i < Number_Of_Odd_Degree_Vertex ; i++ )
+        Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[i]->name );
+
+
+
     if(Number_Of_Odd_Degree_Vertex = 2)
         nm->connect(Odd_Degree_Vertex[0]->name,Odd_Degree_Vertex[1]->name);
     //else if(Number_Of_Odd_Degree_Vertex > 2)
         //Graph_Eulerizing( nm , Number_Of_Vertex , Odd_Degree_Vertex , Number_Of_Odd_Degree_Vertex );
-    */    
+    
         
-    Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name );    
         
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
@@ -108,7 +112,7 @@ int main(int argc, char** argv){
     
     //Search Euler Path
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
-    //Euler_Path_Searching(nm , node_list);
+    Euler_Path_Searching(nm , node_list);
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
     
     
@@ -171,28 +175,14 @@ void Euler_Path_Searching( NetworkManager* nm , vector<Vertex*> node_list ) {
                 }
     }
     
-    
-    
+    int Number_Of_Vertex_In_Euler_Path ;
+    Number_Of_Vertex_In_Euler_Path = Euler_Path.size() ;
+    for( int i = 0 ; i < Number_Of_Vertex_In_Euler_Path ; i++ ) {
+
         cout << Euler_Path.top()<<endl;
         Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
+
+    }
     
 }
 
@@ -236,12 +226,12 @@ void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Numb
     
     std::queue<std::string> Breadth_First_Search_Path ;
     
-    int distance [Number_Of_Vertex] ;
-    int color[Number_Of_Vertex] ; //0 is white, 1 is gray, and 2 is black.
+    int Distance_From_Start_Vertex [Number_Of_Vertex] ;
+    int Visit_Condition[Number_Of_Vertex] ; //0 is white, 1 is gray, and 2 is black.
     for(int i = 0 ; i < Number_Of_Vertex ; i++) {
     
-        color[i] = 0 ;
-        distance [i] = 9999 ;
+        Visit_Condition[i] = 0 ;
+        Distance_From_Start_Vertex [i] = 9999 ;
     
     }
     
@@ -255,15 +245,15 @@ void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Numb
             
             if( ! ( nm->connected( Breadth_First_Search_Path.front() , node_list[i]->name ) ) ) {
                 
-                color[i] = 1 ;
-                distance [i] = distance [0] + 1 ;
+                Visit_Condition[i] = 1 ;
+                Distance_From_Start_Vertex [i] = Distance_From_Start_Vertex [0] + 1 ;
                 parent[i] = Breadth_First_Search_Path.front() ;
                 Breadth_First_Search_Path.push(node_list[i]->name) ;
                 
             }
         }  
         
-        color[i] = 2 ;
+        Visit_Condition[i] = 2 ;
     
     }
     
@@ -276,130 +266,52 @@ void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Numb
 }
 */
 
-int Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Odd_Degree_Vertex ) {
+void Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex ) {
 
     std::queue<std::string> Breadth_First_Search_Path ;
     
-    int distance [Number_Of_Vertex] ;
-    int color[Number_Of_Vertex] ; //0 is white, 1 is gray, and 2 is black.
+    int Distance_From_Start_Vertex [Number_Of_Vertex] ;
+    int Visit_Condition[Number_Of_Vertex] ; // 0 is nonvisited. ; 1 is visited and has someone can visit. ; 2 is visited and has none can visit.
     for(int i = 0 ; i < Number_Of_Vertex ; i++) {
     
-        color[i] = 0 ;
-        distance [i] = 9999 ;
+        Distance_From_Start_Vertex [i] = 0 ;
+        Visit_Condition[i] = 0 ;
     
     }
     
-    
-    
-    
-    
-    for(int i = 0 ; i < Number_Of_Vertex ; i++ ){
-        cout<<i<<endl;
-        cout<<"color is "<<color[i]<<endl;
-    }
-    
+    int Start_Vertex_Number;
+    Start_Vertex_Number = Vertex_Number_Getting( node_list , Start_Vertex ) ;   
     
     string parent[Number_Of_Vertex] ;
-    string aaa ;
+    string Temp_Start_Vertex ;
     
-    distance [1] = 0;
-    Breadth_First_Search_Path.push(Odd_Degree_Vertex);
+    Distance_From_Start_Vertex [Start_Vertex_Number] = 0;
+    Breadth_First_Search_Path.push(Start_Vertex);
     
-    //cout<<Breadth_First_Search_Path.front()<<endl;
-    //cout<<node_list[0]->name<<endl;
-    
+    int Vertex_Number;
     while( ! Breadth_First_Search_Path.empty() ) {
-    
-        aaa=Breadth_First_Search_Path.front();
-        Breadth_First_Search_Path.pop();
-        cout<<aaa<<endl;
-        
-        for(int i = 0 ; i < Number_Of_Vertex ; i++ ) {
-            
-            
-            //cout<<i<<endl;
-            cout<<nm->connected( aaa , node_list[i]->name )<<endl;
-            cout<<color[i]<<endl;
-            
-            if( ( ! ( nm->connected( aaa , node_list[i]->name ) ) ) && ( color[i] == 0 ) ) {
-                cout<<i<<" yes"<<endl;
-                color[i] = 1 ;
-                distance [i] = distance [1] + 1 ;
-                cout<<"distance is "<<distance [i]<<endl;
+
+        Temp_Start_Vertex=Breadth_First_Search_Path.front() ;
+        Breadth_First_Search_Path.pop() ;
+        Vertex_Number=Vertex_Number_Getting( node_list , Temp_Start_Vertex ) ;
+
+        for(int i = 0 ; i < Number_Of_Vertex ; i++ )
+
+            if( ( ! ( nm->connected( Temp_Start_Vertex , node_list[i]->name ) ) ) && ( Visit_Condition[i] == 0 ) ) {
+
+                Visit_Condition[i] = 1 ;
+                Distance_From_Start_Vertex[i] = Distance_From_Start_Vertex [Vertex_Number] + 1 ;
                 parent[i] = Breadth_First_Search_Path.front() ;
                 Breadth_First_Search_Path.push(node_list[i]->name) ;
-                //cout<<node_list[i]->name<<endl;
+
             }
-            else{
-                cout<<i<<endl;
-                cout<<"no"<<endl;
-            }
-        }  
-        
-        /*
-        
-        if(aaa=="b")
-            color[1] = 2 ;
-        
-        
-        switch (aaa) { 
-            case 'a': 
-                color[0] = 2 ; 
-                break; 
-            case 'b': 
-                color[1] = 2 ; 
-                break; 
-            case 'c': 
-                color[2] = 2 ; 
-                break; 
-            case 'd': 
-                color[3] = 2 ; 
-                break;
-            case 'e': 
-                color[4] = 2 ; 
-                break; 
-            case 'f': 
-                color[5] = 2 ; 
-                break; 
-            case 'g': 
-                color[6] = 2 ; 
-                break; 
-            //default: 
-                //; 
-        }
-        
-        
-        
-        */
-        
-        
-        
-        
-        /*
-        cout<<Breadth_First_Search_Path.front()<<endl;
-        Breadth_First_Search_Path.pop();
-        cout<<Breadth_First_Search_Path.front()<<endl;
-        Breadth_First_Search_Path.pop();
-        cout<<Breadth_First_Search_Path.front()<<endl;
-        Breadth_First_Search_Path.pop();
-        cout<<Breadth_First_Search_Path.front()<<endl;
-        Breadth_First_Search_Path.pop();
-        cout<<Breadth_First_Search_Path.front()<<endl;
-        Breadth_First_Search_Path.pop();
-        cout<<Breadth_First_Search_Path.front()<<endl;
-        Breadth_First_Search_Path.pop();
-        */
-   
+
+        Visit_Condition[Vertex_Number] = 2 ;
+
     }
     
-    /*
-    for(int i = 0 ; i < Number_Of_Vertex ; i++ ){
-        cout<<i<<endl;
-        cout<<distance[i]<<endl;
-    }
-    */
-
-    return 0 ;
+    for(int i = 0 ; i < Number_Of_Vertex ; i++ )
+        cout<<"Distance betweem Vertex \""<<Start_Vertex<<"\" and Vertex \""<<node_list[i]->name<<"\" is "<<Distance_From_Start_Vertex[i]<<endl;
 
 }
 
