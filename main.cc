@@ -98,38 +98,51 @@ int main(int argc, char** argv){
         }
     for(int i = 0 ; i < Number_Of_Odd_Degree_Vertex ; i++)
         cout<<"Vertex \""<<Odd_Degree_Vertex[i]->name<<"\" is odd degree Vertex."<<endl;
-        
+    
+    cout<<"Test Point1"<<endl;
+    cout<<Number_Of_Odd_Degree_Vertex<<endl;
 
     
-    cout<<Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , "b" , "e" )<<endl;
-
-    
-    std::queue<std::string> Breadth_First_Search_Path ;
-    Breadth_First_Search_Path = Breadth_First_Search_Path_Getting( nm , node_list , Number_Of_Vertex , "b" ) ;
-    
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    if ( Number_Of_Odd_Degree_Vertex = 2 )
+    queue<std::string> Shortest_Path_queue ;
+    vector<std::string> Shortest_Path_vector ;
+    if ( Number_Of_Odd_Degree_Vertex == 2 ){
+        cout<<"Test Point111111111"<<endl;
         if ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) == 1 )
+        //if ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , "b" , "d" ) == 1 )
             nm -> connect( Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[1] -> name ) ;
-        //else
+        else {
+            cout<<"Test Point1"<<endl;
+            Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[1] -> name ) ;
+            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
+            int rrrr ;
+            rrrr = Shortest_Path_queue.size() ;
+            for ( int i = 0 ; i < rrrr ; i++ ) {
+                
+                Shortest_Path_vector.push_back(Shortest_Path_queue.front());
+                Shortest_Path_queue.pop();
+            }
+        
+            cout<<"eeeeeeeeeeeeeee"<<Shortest_Path_vector.size()<<endl;
+            cout<<Shortest_Path_vector[2]<<endl;
+            
+        
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
+                cout<<i<<endl;
+                cout<<Shortest_Path_vector[i]<<endl;
+                cout<<Shortest_Path_vector[i+1]<<endl;
+                nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
+            }
+        }
+    }
+    else
+        cout<<"Test Point"<<endl;
     //else if(Number_Of_Odd_Degree_Vertex > 2)
         //Graph_Eulerizing( nm , Number_Of_Vertex , Odd_Degree_Vertex , Number_Of_Odd_Degree_Vertex );
     
         
    
 
-
+    cout<<"Test Point"<<endl;
 
 
 
@@ -244,7 +257,7 @@ int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_l
 
 }
 
-int Vertex_Number_Getting(vector<Vertex*> node_list , string vertex){
+int Vertex_Number_Getting ( vector<Vertex*> node_list , string vertex){
     
     int Vertex_Number = 0 ;
     while(vertex != node_list[Vertex_Number]->name)
@@ -342,10 +355,10 @@ int Distance_Getting_By_Breadth_First_Search( NetworkManager* nm , vector<Vertex
 
     }
     
-    
+    /*
     for(int i = 0 ; i < Number_Of_Vertex ; i++ )
         cout<<"Distance betweem Vertex \""<<Start_Vertex<<"\" and Vertex \""<<node_list[i]->name<<"\" is "<<Distance_From_Start_Vertex[i]<<endl;
-    
+    */
     
     
     
@@ -402,6 +415,7 @@ queue<std::string> Breadth_First_Search_Path_Getting( NetworkManager* nm , vecto
     
     Breadth_First_Search_Path.push ( Start_Vertex ) ;
     
+    
     int Temp_Vertex_Number;
     while( ! Temp_Breadth_First_Search_Path.empty() ) {
 
@@ -431,13 +445,13 @@ queue<std::string> Breadth_First_Search_Path_Getting( NetworkManager* nm , vecto
     */
     
 
-    
+    /*
     for(int i = 0 ; i < Number_Of_Vertex ; i++ ) {
         cout<<"eeeeeeeeeeeeeeeeeeee"<<Breadth_First_Search_Path.front()<<endl;
         Breadth_First_Search_Path.pop() ;
     }
     
-    
+    */
     
     
     
@@ -458,7 +472,7 @@ queue<std::string> Breadth_First_Search_Path_Getting( NetworkManager* nm , vecto
 
 
 
-/*
+
 
 queue<std::string> Shortest_Path_Getting( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex , string End_Vertex ) {
 
@@ -467,33 +481,78 @@ queue<std::string> Shortest_Path_Getting( NetworkManager* nm , vector<Vertex*> n
     queue<std::string> Shortest_Path ;
     
     int Distance_Between_Start_Vertex_And_End_Vertex ;
-    Distance_Between_Start_Vertex_And_End_Vertex = Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Start_Vertex , End_Vertex )
+    Distance_Between_Start_Vertex_And_End_Vertex = Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Start_Vertex , End_Vertex ) ;
+    
+    /*
+    cout<<"Test Point"<<endl;
+    cout<<Start_Vertex<<endl;
+    cout<<"Test Point"<<endl;
+    */
     
     Breadth_First_Search_Path = Breadth_First_Search_Path_Getting( nm , node_list , Number_Of_Vertex , Start_Vertex ) ;
     
+    
+    //cout<<Breadth_First_Search_Path.front()<<endl;
     Shortest_Path.push( Breadth_First_Search_Path.front() );
     Breadth_First_Search_Path.pop();
     
-    for ( int i = 0 ; i < Breadth_First_Search_Path.size() - 1 ; i++ )
-        if ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Shortest_Path.front() , Breadth_First_Search_Path.front() ) == 1) && (( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Breadth_First_Search_Path.front() , End_Vertex ) == 1)) )
     
     
-    
-    
-        if( ! ( nm -> connected_d( Shortest_Path.front() , Breadth_First_Search_Path.front() ) ) ) {
+    //cout<<Shortest_Path.size()<<endl;
+    //cout<<Shortest_Path.front()<<endl;
 
-            Shortest_Path.push( Breadth_First_Search_Path.front() );
-            Breadth_First_Search_Path.pop();
+    
+    int j = 1 ;
+    int ssss = Breadth_First_Search_Path.size() ;
+    for ( int i = 0 ; i < ssss ; i++ ) {
+        
+        /*
+        cout<<"Test Point4"<<endl;
+        cout<<i<<endl;
+        cout<<Breadth_First_Search_Path.size()<<endl;
+        cout<<Shortest_Path.front()<<endl;
+        cout<<Breadth_First_Search_Path.front()<<endl;
+        
+        cout<<Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Shortest_Path.front() , Breadth_First_Search_Path.front() )<<endl;
+        cout<<Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Breadth_First_Search_Path.front() , End_Vertex )<<endl;
+        */
+        
+        
+        
+        if ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Shortest_Path.front() , Breadth_First_Search_Path.front() ) == j ) && (( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Breadth_First_Search_Path.front() , End_Vertex ) == (Distance_Between_Start_Vertex_And_End_Vertex - j) ) ) ) {
             
+            Shortest_Path.push( Breadth_First_Search_Path.front() );
+            //cout<<Shortest_Path.size()<<endl;
+            //cout<<"Test Point4"<<endl;
+            Breadth_First_Search_Path.pop();
+            j++;
         }
         else
             Breadth_First_Search_Path.pop();
         
+    }    
+    
+    
+    //Shortest_Path.push( Breadth_First_Search_Path.front() );
+    
+    
+    
+    //cout<<"Test Point3"<<endl;
+    
+    
+    /*
+    for ( int i = 0 ; i < Distance_Between_Start_Vertex_And_End_Vertex + 1 ; i++ ) {
+    
+        cout<<Shortest_Path.front()<<endl;
+        Shortest_Path.pop();
+
+    }
+    */
     
     return Shortest_Path;
 
 }
 
-*/
+
 
 
