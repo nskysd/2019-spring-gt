@@ -30,17 +30,18 @@ queue<std::string> Shortest_Path_Getting ( NetworkManager* nm , vector<Vertex*> 
 
 
 // create NetworkManager first
-NetworkManager *nm = new NetworkManager();
+NetworkManager *nm = new NetworkManager () ;
 
 
-int main(int argc, char** argv){
+int main ( int argc , char** argv ) {
 
     //Read Graph
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    nm->interpret("Graph.txt");
-    nm->print_all_e();
-    nm->print_all_v();
+    //nm -> interpret ( "Graph.txt" ) ;
+    nm -> interpret ( "Graph_Test.txt" ) ;
+    nm -> print_all_e () ;
+    nm -> print_all_v () ;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,12 +49,14 @@ int main(int argc, char** argv){
     //Identify Odd Degree Vertex
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    Vertex* node = nm->get_all_nodes();
+    Vertex* node = nm -> get_all_nodes () ;
     vector<Vertex*> node_list;
 
-    while(node != 0 ){
-       node_list.push_back(node);
-       node=node->next;
+    while( node != 0 ) {
+
+       node_list.push_back( node ) ;
+       node = node -> next ;
+
     }
 
     /*
@@ -105,13 +108,15 @@ int main(int argc, char** argv){
     
     queue<std::string> Shortest_Path_queue ;
     vector<std::string> Shortest_Path_vector ;
-    if ( Number_Of_Odd_Degree_Vertex == 2 ){
-        cout<<"Test Point111111111"<<endl;
+    if ( Number_Of_Odd_Degree_Vertex == 2 )
+        
         if ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) == 1 )
-        //if ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , "b" , "d" ) == 1 )
+
             nm -> connect( Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[1] -> name ) ;
+         
         else {
-            cout<<"Test Point1"<<endl;
+            
+            //cout<<"Test Point1"<<endl;
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[1] -> name ) ;
             //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
             int rrrr ;
@@ -120,12 +125,7 @@ int main(int argc, char** argv){
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
                 Shortest_Path_queue.pop();
-            }
-        
-            cout<<"eeeeeeeeeeeeeee"<<Shortest_Path_vector.size()<<endl;
-            cout<<Shortest_Path_vector[2]<<endl;
-            
-        
+            }     
             for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
                 cout<<i<<endl;
                 cout<<Shortest_Path_vector[i]<<endl;
@@ -133,16 +133,11 @@ int main(int argc, char** argv){
                 nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
             }
         }
-    }
-    else
-        cout<<"Test Point"<<endl;
     //else if(Number_Of_Odd_Degree_Vertex > 2)
         //Graph_Eulerizing( nm , Number_Of_Vertex , Odd_Degree_Vertex , Number_Of_Odd_Degree_Vertex );
     
         
    
-
-    cout<<"Test Point"<<endl;
 
 
 
@@ -154,14 +149,11 @@ int main(int argc, char** argv){
     
     //Search Euler Path
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     Euler_Path_Searching(nm , node_list);
+    
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
-    
-    
-    
-    
-    
-    
+
     return 0;
 
 }
@@ -266,51 +258,6 @@ int Vertex_Number_Getting ( vector<Vertex*> node_list , string vertex){
     return Vertex_Number;
 }
 
-
-/*
-void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , vector<Vertex*> Odd_Degree_Vertex , int Number_Of_Odd_Degree_Vertex ){
-    
-    std::queue<std::string> Distance_Getting_By_Breadth_First_Search_Path ;
-    
-    int Distance_From_Start_Vertex [Number_Of_Vertex] ;
-    int Visit_Condition[Number_Of_Vertex] ; //0 is white, 1 is gray, and 2 is black.
-    for(int i = 0 ; i < Number_Of_Vertex ; i++) {
-    
-        Visit_Condition[i] = 0 ;
-        Distance_From_Start_Vertex [i] = 9999 ;
-    
-    }
-    
-    string parent[Number_Of_Vertex] ;
-    
-    Distance_Getting_By_Breadth_First_Search_Path.push(Odd_Degree_Vertex[0]);
-    
-    while( ! Distance_Getting_By_Breadth_First_Search_Path.empty() ) {
-    
-        for(int i = 0 ; i < Number_Of_Vertex ; i++ ) {
-            
-            if( ! ( nm->connected( Distance_Getting_By_Breadth_First_Search_Path.front() , node_list[i]->name ) ) ) {
-                
-                Visit_Condition[i] = 1 ;
-                Distance_From_Start_Vertex [i] = Distance_From_Start_Vertex [0] + 1 ;
-                parent[i] = Distance_Getting_By_Breadth_First_Search_Path.front() ;
-                Distance_Getting_By_Breadth_First_Search_Path.push(node_list[i]->name) ;
-                
-            }
-        }  
-        
-        Visit_Condition[i] = 2 ;
-    
-    }
-    
-    if( Number_Of_Odd_Degree_Vertex = 2 )
-        if( ! ( nm->connected( Odd_Degree_Vertex[Number_Of_Odd_Degree_Vertex-2]->name , Odd_Degree_Vertex[Number_Of_Odd_Degree_Vertex-1]->name ) ) )
-            nm -> connect( Odd_Degree_Vertex[Number_Of_Odd_Degree_Vertex-2]->name , Odd_Degree_Vertex[Number_Of_Odd_Degree_Vertex-1]->name ) ;
-        else if()
-    else
-}
-*/
-
 int Distance_Getting_By_Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex , string End_Vertex ) {
 
     std::queue<std::string> Temp_Breadth_First_Search_Path ;
@@ -371,23 +318,6 @@ int Distance_Getting_By_Breadth_First_Search( NetworkManager* nm , vector<Vertex
     
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 queue<std::string> Breadth_First_Search_Path_Getting( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex ) {
@@ -454,23 +384,10 @@ queue<std::string> Breadth_First_Search_Path_Getting( NetworkManager* nm , vecto
     */
     
     
-    
-    
-    
-    
     return Breadth_First_Search_Path ;
     
 
-    
-    
 }
-
-
-
-
-
-
-
 
 
 
