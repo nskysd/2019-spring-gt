@@ -90,8 +90,18 @@ And this program can finds the best solution under the condition that the number
 
 ### Solutions
 
-    1.Find out all vertex with an odd degree in this graph. And put them into a vector called Odd_Degree_Vertex.
+    1.Find out all vertex with an odd degree in this graph, and put them into a vector called Odd_Degree_Vertex, by the way, we also count the number of vertex with an odd degree.
 
+    2-1.If the number of vertex with an odd degree is 0
+        Do nothing.
+    2-2.If the number of vertex with an odd degree is 2
+        2-2-1.These two vertex are connected
+            Directly build the connection between these two vertex.
+        2-2-2.These two vertex are not connected
+            Find the shortest path between these two vertex, and connect each vertex in shortest path.
+    2-3.If the number of vertex with an odd degree is greater than 2
+            Find the minimum length pairwise matching of all vertex with an odd degree, then find the shortest path of each pair, and connect each vertex in shortest path.
+      
 
 
 
