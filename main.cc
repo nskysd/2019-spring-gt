@@ -288,6 +288,14 @@ int main ( int argc , char** argv ) {
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
+    
+    
+    
+ 
+    
+    
+    
+    
     return 0;
 
 }
@@ -295,7 +303,7 @@ int main ( int argc , char** argv ) {
 
 void Euler_Path_Searching( NetworkManager* nm , vector<Vertex*> node_list ) {
     
-    std::stack<std::string> Euler_Path ;
+    std::stack<std::string> Euler_Path_stack ;
     std::stack<std::string> Temp_Euler_Path ;
     
     nm->print_all_e();
@@ -322,7 +330,7 @@ void Euler_Path_Searching( NetworkManager* nm , vector<Vertex*> node_list ) {
         
         if( Accessible_Vertex_Identification( nm , node_list , node_list[Start_Vertex_Number]->name ) ) {
             
-            Euler_Path.push(Temp_Euler_Path.top());
+            Euler_Path_stack.push(Temp_Euler_Path.top());
             Temp_Euler_Path.pop();
         
         }
@@ -347,14 +355,57 @@ void Euler_Path_Searching( NetworkManager* nm , vector<Vertex*> node_list ) {
                 }
     }
     
+    
+    
+    
+    
+    
+    vector<string> Euler_Path_vector;
+    
     int Number_Of_Vertex_In_Euler_Path ;
-    Number_Of_Vertex_In_Euler_Path = Euler_Path.size() ;
+    Number_Of_Vertex_In_Euler_Path = Euler_Path_stack.size() ;
     for( int i = 0 ; i < Number_Of_Vertex_In_Euler_Path ; i++ ) {
 
-        cout << Euler_Path.top()<<endl;
-        Euler_Path.pop();
+        Euler_Path_vector.push_back(Euler_Path_stack.top());
+        Euler_Path_stack.pop();
 
     }
+    
+    
+    for(int i = 0 ; i < Euler_Path_vector.size() - 1 ; i++ ) {
+
+        nm -> connect ( Euler_Path_vector[i] , Euler_Path_vector[i+1] ) ;
+    }
+    
+    
+    int Number_Of_Vertex_In_Euler_Path_vector ;
+    Number_Of_Vertex_In_Euler_Path_vector = Euler_Path_vector.size() ;
+    for( int i = 0 ; i < Number_Of_Vertex_In_Euler_Path_vector ; i++ ) {
+
+        cout << Euler_Path_vector[i] <<endl;
+
+    }
+    
+    
+    
+    
+    
+    string writeFileName="Euler_Path.txt";
+    ofstream out(writeFileName.c_str());
+    for(int i=0; i<Euler_Path_vector.size(); i++)
+        out<<Euler_Path_vector[i]<<endl;
+    out.close();
+    
+    Gplot *gp = new Gplot();
+    gp->gp_add(nm->elist);
+    gp->gp_dump(true);
+    gp->gp_export("Euler_Path");
+    
+    
+    
+    
+    
+    
     
 }
 
