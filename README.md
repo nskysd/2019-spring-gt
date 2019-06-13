@@ -102,7 +102,7 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
             Find the shortest path between these two vertex, and connect each vertex in shortest path.
     2-3.If the number of vertex with an odd degree is greater than 2.
             Find the minimum length pairwise matching of all vertex with an odd degree, then find the shortest path of each pair, and connect each vertex in shortest path.
-        PS:Since the weight of each connection is 1, I use BFS algorithm to Find the shortest path instead of Dijkstra's algorithm.
+        PS:Since the weight of each connection is 1, I use BFS algorithm to find the shortest path instead of Dijkstra's algorithm.
     
     3.Use Hierholzer algorithm to find Euler Path.
     
