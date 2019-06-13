@@ -83,10 +83,11 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
 
 
 ### Abstrct
-In graph theory, the Chinese postman problem (CPP), 
-is a problem to find a shortest closed path or circuit that visits every edge of an (connected) undirected graph.
+    
+    1.In graph theory, the Chinese postman problem (CPP), is a problem to find a shortest closed path or circuit that visits every edge of an (connected) undirected graph.
 
-And this program can finds the best solution under the condition that the number of vertex with an odd degree is less than 4.
+
+    2. This program can finds the best solution under the condition that the number of vertex with an odd degree is less than 4.
 
 ### Solutions
 
@@ -101,8 +102,18 @@ And this program can finds the best solution under the condition that the number
             Find the shortest path between these two vertex, and connect each vertex in shortest path.
     2-3.If the number of vertex with an odd degree is greater than 2
             Find the minimum length pairwise matching of all vertex with an odd degree, then find the shortest path of each pair, and connect each vertex in shortest path.
-      
+    
+        PS:Since the weight of each connection is 1, I use BFS algorithm to Find the shortest path instead of Dijkstra's algorithm.
+    
+    3.Use Hierholzer algorithm to find Euler path
+    
+        To find Euler path, I construct 2 stack, Euler_path_stack and Temp_Euler_path.
+        
+        First, I push vertex "a" into Temp_Euler_path. 
+        
+        Second, if there is any vertex has connection with Temp_Euler_path's top vertex, push it into Temp_Euler_path and disconnect with Temp_Euler_path's top vertex.
 
+        Third, if there is no vertex has connection with Temp_Euler_path's top vertex, push Temp_Euler_path's top vertex into Euler_path_stack until Temp_Euler_path's top vertex has connection with any vertex. 
 
 
 
