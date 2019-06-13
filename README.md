@@ -80,3 +80,34 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
 > [Guide of environment setting](https://hackmd.io/-5WZQC-1QqOeV3KUX65tEw?view) on Windows.
 
 ## TODO - Your descriptions about solutions/algorithms/results
+
+
+## Abstrct
+In graph theory, the Chinese postman problem (CPP), 
+is to find a shortest closed path or circuit that visits every edge of an (connected) undirected graph.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
