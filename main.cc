@@ -20,7 +20,7 @@ using namespace std;
 void Euler_Path_Searching(NetworkManager* nm , vector<Vertex*> node_list);
 void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , vector<Vertex*> Odd_Degree_Vertex , int Number_Of_Odd_Degree_Vertex );
 
-int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_list , string vertex);
+int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_list , string Identified_Vertex);
 int Vertex_Number_Getting(vector<Vertex*> node_list , string vertex);
 int Distance_Getting_By_Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex , string End_Vertex ) ;
 
@@ -106,7 +106,7 @@ int main ( int argc , char** argv ) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
     
 
-    //Eulerize Graph (If Graph is not Eulerian)
+    //Eulerize Graph ( If Graph is not Eulerian )
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     queue<std::string> Shortest_Path_queue ;
@@ -257,8 +257,6 @@ int main ( int argc , char** argv ) {
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
     
-    cout<<"ddddddddddddddddddddddddddddddddddddddddd"<<endl;
-    
     //Search Euler Path
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
     
@@ -266,160 +264,120 @@ int main ( int argc , char** argv ) {
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
-    
-    
-    
- 
-    
-    
-    
-    
     return 0;
 
 }
 
-
+// Search and print the Euler Path, in addition, generate related file.
 void Euler_Path_Searching( NetworkManager* nm , vector<Vertex*> node_list ) {
     
-    std::stack<std::string> Euler_Path_stack ;
-    std::stack<std::string> Temp_Euler_Path ;
-    
-    nm->print_all_e();
-    nm->print_all_v();
+    vector<string> Euler_Path ;
+    vector<string> Temp_Euler_Path ;
 
-    Temp_Euler_Path.push(node_list[0]->name);
-   
-   
-    /*
-    cout<<vertex.top()<<endl;
-    */
-  
-    /*
-    cout << Accessible_Vertex_Identification( nm , node_list , node_list[0]->name ) << endl ;
-    cout << Vertex_Number_Getting( node_list , "a" ) << endl ;
-    */  
+    Temp_Euler_Path.push_back ( node_list[0] -> name ) ;
     
+    // Search the Euler Path.
     int Number_Of_Vertex;
     int Start_Vertex_Number;
-    Number_Of_Vertex=node_list.size();
-    while(!Temp_Euler_Path.empty()) {
+    Number_Of_Vertex = node_list.size() ;
+    while ( ! Temp_Euler_Path.empty() ) {
         
-        Start_Vertex_Number = Vertex_Number_Getting( node_list , Temp_Euler_Path.top() );
+        Start_Vertex_Number = Vertex_Number_Getting ( node_list , Temp_Euler_Path.back() ) ;
         
-        if( Accessible_Vertex_Identification( nm , node_list , node_list[Start_Vertex_Number]->name ) ) {
+        if ( Accessible_Vertex_Identification( nm , node_list , node_list[Start_Vertex_Number] -> name ) ) {
             
-            Euler_Path_stack.push(Temp_Euler_Path.top());
-            Temp_Euler_Path.pop();
+            Euler_Path.push_back ( Temp_Euler_Path.back() ) ;
+            Temp_Euler_Path.pop_back() ;
         
         }
+
         else
-            for( int i = 0 ; i < Number_Of_Vertex ; i++ )
-                if( ! ( nm->connected_d( node_list[Start_Vertex_Number]->name , node_list[i]->name ) ) ) {
+            
+            for ( int i = 0 ; i < Number_Of_Vertex ; i++ )
+                if ( ! ( nm->connected_d( node_list[Start_Vertex_Number] -> name , node_list[i] -> name ) ) ) {
                   
-                    nm->disconnect( node_list[Start_Vertex_Number]->name , node_list[i]->name );
-                    cout << "Vertex \""<<node_list[Start_Vertex_Number]->name<<"\" and Vertex \" "<<node_list[i]->name<<"\" is disconnected"<<endl;
-                    nm->print_all_e();
-                    Temp_Euler_Path.push( node_list[i]->name ) ;
+                    nm -> disconnect ( node_list[Start_Vertex_Number] -> name , node_list[i] -> name );
+                    Temp_Euler_Path.push_back ( node_list[i]->name ) ;
                     break;
                 }    
 
                 else if( ! ( nm->connected_d( node_list[i]->name , node_list[Start_Vertex_Number]->name ) ) ) {
                     
                     nm->disconnect( node_list[i]->name , node_list[Start_Vertex_Number]->name );
-                    cout << "Vertex \""<<node_list[Start_Vertex_Number]->name<<"\" and Vertex \" "<<node_list[i]->name<<"\" is disconnected"<<endl;
-                    nm->print_all_e();
-                    Temp_Euler_Path.push( node_list[i]->name ) ;
+                    Temp_Euler_Path.push_back( node_list[i]->name ) ;
                     break;
                 }
-    }
-    
-    
-    
-    
-    
-    
-    vector<string> Euler_Path_vector;
-    
-    int Number_Of_Vertex_In_Euler_Path ;
-    Number_Of_Vertex_In_Euler_Path = Euler_Path_stack.size() ;
-    for( int i = 0 ; i < Number_Of_Vertex_In_Euler_Path ; i++ ) {
 
-        Euler_Path_vector.push_back(Euler_Path_stack.top());
-        Euler_Path_stack.pop();
 
     }
     
-    
-    for(int i = 0 ; i < Euler_Path_vector.size() - 1 ; i++ ) {
+    // Connect each vertex in Euler_Path. ( If neglect this action, the file "Euler_Path.dot" will only contain the vertex. )
+    for(int i = 0 ; i < Euler_Path.size() - 1 ; i++ ) {
 
-        nm -> connect ( Euler_Path_vector[i] , Euler_Path_vector[i+1] ) ;
+        nm -> connect ( Euler_Path[i] , Euler_Path[i+1] ) ;
     }
     
-    
-    int Number_Of_Vertex_In_Euler_Path_vector ;
-    Number_Of_Vertex_In_Euler_Path_vector = Euler_Path_vector.size() ;
-    for( int i = 0 ; i < Number_Of_Vertex_In_Euler_Path_vector ; i++ ) {
-
-        cout << Euler_Path_vector[i] <<endl;
+    // Print the Euler Path and generate the file "Euler_Path.txt".
+    string writeFileName = "Euler_Path.txt" ;
+    ofstream out ( writeFileName.c_str() ) ;
+    for ( int i = 0 ; i < Euler_Path.size() ; i++ ) {
+        
+        cout << Euler_Path[i] <<endl;
+        out << Euler_Path[i] << endl;
 
     }
-    
-    
-    
-    
-    
-    string writeFileName="Euler_Path.txt";
-    ofstream out(writeFileName.c_str());
-    for(int i=0; i<Euler_Path_vector.size(); i++)
-        out<<Euler_Path_vector[i]<<endl;
     out.close();
-    
+
+    // generate the file "Euler_Path.dot".
     Gplot *gp = new Gplot();
-    gp->gp_add(nm->elist);
-    gp->gp_dump(true);
-    gp->gp_export("Euler_Path");
-    
-    
-    
-    
-    
-    
-    
+    gp -> gp_add ( nm -> elist ) ;
+    gp -> gp_dump ( true ) ;
+    gp -> gp_export ( "Euler_Path" ) ;
+ 
 }
 
-
-int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_list , string vertex){
+// Identify if there is any vertex accessible for Identified_Vertex. ( If there is, return 0, otherwise, return 1. )
+int Accessible_Vertex_Identification ( NetworkManager* nm , vector<Vertex*> node_list , string Identified_Vertex ) {
     
     int Number_Of_Vertex;
-    Number_Of_Vertex=node_list.size();
+    Number_Of_Vertex = node_list.size();
+    
+    int Degree_Of_Identified_Vertex = 0 ; 
+    for ( int i = 0 ; i < Number_Of_Vertex ; i++ )
+        
+        if ( ! ( nm -> connected ( Identified_Vertex , node_list[i] -> name ) ) )
+            
+            Degree_Of_Identified_Vertex = Degree_Of_Identified_Vertex + 1 ;
+        
+        else
+            
+            Degree_Of_Identified_Vertex = Degree_Of_Identified_Vertex ;
 
     
-    int degree = 0 ; 
-    for(int i = 0 ; i < Number_Of_Vertex ; i++)
-        if(!(nm->connected(vertex , node_list[i]->name)))
-            degree = degree + 1 ;
-        else
-            degree = degree ;
-    
-    /*    
-    cout << "Degree of Vertex\"" << vertex << "\" is " << degree << endl ;
-    */
-      
-    if(degree)
+    if ( Degree_Of_Identified_Vertex )
+        
         return 0 ;
+    
     else
+        
         return 1 ;
 
+
 }
 
-int Vertex_Number_Getting ( vector<Vertex*> node_list , string vertex){
+// Get vertex number of Getted_Vertex in container ( ie. stack, queue, etc. ) and return the vertex number.
+int Vertex_Number_Getting ( vector<Vertex*> node_list , string Getted_Vertex ) {
     
     int Vertex_Number = 0 ;
-    while(vertex != node_list[Vertex_Number]->name)
+    while ( Getted_Vertex != node_list[Vertex_Number] -> name )
+        
         Vertex_Number++ ;
 
+
     return Vertex_Number;
+
 }
+
 
 int Distance_Getting_By_Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex , string End_Vertex ) {
 
@@ -563,16 +521,8 @@ queue<std::string> Shortest_Path_Getting( NetworkManager* nm , vector<Vertex*> n
     int Distance_Between_Start_Vertex_And_End_Vertex ;
     Distance_Between_Start_Vertex_And_End_Vertex = Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Start_Vertex , End_Vertex ) ;
     
-    /*
-    cout<<"Test Point"<<endl;
-    cout<<Start_Vertex<<endl;
-    cout<<"Test Point"<<endl;
-    */
-    
     Breadth_First_Search_Path = Breadth_First_Search_Path_Getting( nm , node_list , Number_Of_Vertex , Start_Vertex ) ;
     
-    
-    //cout<<Breadth_First_Search_Path.front()<<endl;
     Shortest_Path.push( Breadth_First_Search_Path.front() );
     Breadth_First_Search_Path.pop();
     
@@ -611,24 +561,7 @@ queue<std::string> Shortest_Path_Getting( NetworkManager* nm , vector<Vertex*> n
             Breadth_First_Search_Path.pop();
         
     }    
-    
-    
-    //Shortest_Path.push( Breadth_First_Search_Path.front() );
-    
-    
-    
-    //cout<<"Test Point3"<<endl;
-    
-    
-    /*
-    for ( int i = 0 ; i < Distance_Between_Start_Vertex_And_End_Vertex + 1 ; i++ ) {
-    
-        cout<<Shortest_Path.front()<<endl;
-        Shortest_Path.pop();
 
-    }
-    */
-    
     return Shortest_Path;
 
 }
