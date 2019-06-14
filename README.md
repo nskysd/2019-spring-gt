@@ -86,26 +86,26 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
     
     1.In graph theory, the Chinese postman problem (CPP), is a problem to find a shortest closed path or circuit that visits every edge of an (connected) undirected graph.
 
-    2.This program can finds the best solution under the condition that the number of vertex with an odd degree is less than 4.
+    2.This program can finds the best solution under the condition that the number of vertex with odd degree is less than 4.
 
 
 ### Solution
 
-    1.Find out all vertex with an odd degree in this graph, and put them into a vector called Odd_Degree_Vertex, by the way, we also count the number of vertex with an odd degree.
+    1.Find out all vertex with odd degree in this graph, and put them into a vector called Odd_Degree_Vertex, by the way, we also count the number of vertex with odd degree.
 
-    2-1.If the number of vertex with an odd degree is 0.
+    2-1.If the number of vertex with odd degree is 0.
         Do nothing.
-    2-2.If the number of vertex with an odd degree is 2.
+    2-2.If the number of vertex with odd degree is 2.
         2-2-1.These two vertex are connected.
             Directly build the connection between these two vertex.
         2-2-2.These two vertex are not connected.
             Find the shortest path between these two vertex, and connect each vertex in shortest path.
-    2-3.If the number of vertex with an odd degree is greater than 2.
-            Find the minimum length pairwise matching of all vertex with an odd degree, then find the shortest path of each pair, and connect each vertex in shortest path.
+    2-3.If the number of vertex with odd degree is greater than 2.
+            Find the minimum length pairwise matching of all vertex with odd degree, then find the shortest path of each pair, and connect each vertex in shortest path.
         PS:Since the weight of each connection is 1, I use BFS algorithm to find the shortest path instead of Dijkstra's algorithm.
     
-    3.Use Hierholzer algorithm to find Euler Path.
-        To find Euler path, I construct 2 stack, Euler_Path_stack and Temp_Euler_Path.
+    3.Use Hierholzer algorithm to find the Euler Path.
+        To find the Euler path, I construct 2 stack, Euler_Path_stack and Temp_Euler_Path.
         First, I push vertex "a" into Temp_Euler_Path. 
         Second, if there is any vertex has connection with Temp_Euler_Path's top vertex, push it into Temp_Euler_Path and disconnect with Temp_Euler_Path's top vertex.
         Third, if there is no vertex has connection with Temp_Euler_Path's top vertex, push Temp_Euler_Path's top vertex into Euler_Path_stack until Temp_Euler_Path's top vertex has connection with any vertex. 
