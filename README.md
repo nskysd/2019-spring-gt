@@ -115,11 +115,11 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
     
     1.main.cc:The main program.
     
-    2.Graph.txt:The input graph.
+    2.Graph.txt:The input graph ( If you want to input another graph, you need to modify the file name. )
     
     5.Euler_Path.dot:The dot file of result.
     
-    6.Euler_Path.png:The png file of result.
+    6.Euler_Path.png:The png file of result. ( If you want to convert .dot file to .png file, you need to type the command "dot Your_File_Name.dot -T png -o Your_File_Name.png". )
     
     7.Euler_Path.txt:The txt file of result.
 
