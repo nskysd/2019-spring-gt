@@ -18,13 +18,14 @@ using namespace std;
 
 
 void Euler_Path_Searching(NetworkManager* nm , vector<Vertex*> node_list);
+void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , vector<Vertex*> Odd_Degree_Vertex , int Number_Of_Odd_Degree_Vertex );
+
 int Accessible_Vertex_Identification(NetworkManager* nm , vector<Vertex*> node_list , string vertex);
 int Vertex_Number_Getting(vector<Vertex*> node_list , string vertex);
-void Graph_Eulerizing( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , vector<Vertex*> Odd_Degree_Vertex , int Number_Of_Odd_Degree_Vertex );
 int Distance_Getting_By_Breadth_First_Search( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex , string End_Vertex ) ;
+
 queue<std::string> Breadth_First_Search_Path_Getting ( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex ) ;
 queue<std::string> Shortest_Path_Getting ( NetworkManager* nm , vector<Vertex*> node_list , int Number_Of_Vertex , string Start_Vertex , string End_Vertex ) ;
-
 
 
 // create NetworkManager first
@@ -37,19 +38,16 @@ int main ( int argc , char** argv ) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     
     nm -> interpret ( "Graph.txt" ) ;
-    //nm -> interpret ( "Graph_Test.txt" ) ;
-    nm -> print_all_e () ;
-    nm -> print_all_v () ;
+    //nm -> print_all_e () ;
+    //nm -> print_all_v () ;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     //Identify Odd Degree Vertex
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     
     Vertex* node = nm -> get_all_nodes () ;
     vector<Vertex*> node_list;
-
     while( node != 0 ) {
 
        node_list.push_back( node ) ;
@@ -57,53 +55,60 @@ int main ( int argc , char** argv ) {
 
     }
 
-    /*
-    for(int i = 0 ; i < 10 ; i++)
-        cout<<node_list[i]->name<<endl;
-    */
-
     int Number_Of_Vertex;
-    Number_Of_Vertex=node_list.size();
+    Number_Of_Vertex = node_list.size();
 
-    
     int degree[Number_Of_Vertex-1];
-    for(int i = 0 ; i < Number_Of_Vertex ; i++)
+    for( int i = 0 ; i < Number_Of_Vertex ; i++ )
+        
         degree[i]=0;
-    
-    for(int i = 0 ; i < Number_Of_Vertex ; i++)
-        for(int j = 0 ; j < Number_Of_Vertex ; j++)
-            if( ! ( nm->connected( node_list[i]->name , node_list[j]->name ) ) )
+
+
+    for( int i = 0 ; i < Number_Of_Vertex ; i++ )
+        
+        for(int j = 0 ; j < Number_Of_Vertex ; j++ )
+            
+            if( ! ( nm -> connected( node_list[i] -> name , node_list[j] -> name ) ) )
+                
                 degree[i] = degree[i] + 1 ;
+            
             else
+                
                 degree[i] = degree[i] ;
 
-    
+            
+    vector<Vertex*> Odd_Degree_Vertex;    
+    int Number_Of_Odd_Degree_Vertex = 0;
+    for( int i = 0 ; i < Number_Of_Vertex ; i++ )
+
+        if( degree[i]%2 != 0 ) {
+            
+            Odd_Degree_Vertex.push_back( node_list[i] ) ;
+            Number_Of_Odd_Degree_Vertex++ ;
+        
+        }
+
+
+    /*
+    for(int i = 0 ; i < Number_Of_Odd_Degree_Vertex ; i++)
+        
+        cout<<"Vertex \""<<Odd_Degree_Vertex[i]->name<<"\" is odd degree Vertex."<<endl;
+        
+    */
+
+    /*
     for(int i = 0 ; i < Number_Of_Vertex ; i++)
-        //cout<<"Degree["<<i<<"]="<<degree[i]<<endl;
+        
         cout<<"Degree of Vertex \""<<node_list[i]->name<<"\" is "<<degree[i]<<"."<<endl;
+    
+    */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
     
 
     //Eulerize Graph (If Graph is not Eulerian)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
-    vector<Vertex*> Odd_Degree_Vertex;
-    
-    int Number_Of_Odd_Degree_Vertex = 0;
-    for(int i = 0 ; i < Number_Of_Vertex ; i++)
-        if(degree[i]%2 != 0){
-            Odd_Degree_Vertex.push_back(node_list[i]) ;
-            Number_Of_Odd_Degree_Vertex++;
-        }
-    for(int i = 0 ; i < Number_Of_Odd_Degree_Vertex ; i++)
-        cout<<"Vertex \""<<Odd_Degree_Vertex[i]->name<<"\" is odd degree Vertex."<<endl;
-    
-    cout<<"Test Point1"<<endl;
-    cout<<Number_Of_Odd_Degree_Vertex<<endl;
 
-    
     queue<std::string> Shortest_Path_queue ;
     vector<std::string> Shortest_Path_vector ;
     if ( Number_Of_Odd_Degree_Vertex == 2 )
@@ -114,41 +119,27 @@ int main ( int argc , char** argv ) {
          
         else {
             
-            //cout<<"Test Point1"<<endl;
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[1] -> name ) ;
-            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
-            //int rrrr ;
-            //rrrr = Shortest_Path_queue.size() ;
+            
             for ( int i = 0 ; i < Shortest_Path_queue.size() ; i++ ) {
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
                 Shortest_Path_queue.push(Shortest_Path_queue.front());
                 Shortest_Path_queue.pop();
-            }     
-            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
-                //cout<<i<<endl;
-                //cout<<Shortest_Path_vector[i]<<endl;
-                //cout<<Shortest_Path_vector[i+1]<<endl;
+            } 
+            
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ )
+            
                 nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
-            }
+            
         }
     
-    /*
-    A= ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[2]->name , Odd_Degree_Vertex[3]->name ) )
-    B= ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[2]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[3]->name ) )
-    C= ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[3]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[2]->name ) )
-    */
-    
-    else if ( Number_Of_Odd_Degree_Vertex = 4 ) {
-        
-        cout<<"Number_Of_Odd_Degree_Vertex = 4"<<endl;
+    else if ( Number_Of_Odd_Degree_Vertex == 4 ) {
+   
         if ( ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[2]->name , Odd_Degree_Vertex[3]->name ) ) <= ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[2]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[3]->name ) ) ) && ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[2]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[3]->name ) ) <= ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[3]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[2]->name ) ) ) ) {
         
-            cout<<"Test Point1"<<endl;
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[1] -> name ) ;
-            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
-            //int rrrr ;
-            //rrrr = Shortest_Path_queue.size() ;
+
             for ( int i = 0 ; i < Shortest_Path_queue.size() ; i++ ) {
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
@@ -156,130 +147,117 @@ int main ( int argc , char** argv ) {
                 Shortest_Path_queue.pop();
             }
 
-            cout<<Shortest_Path_vector.size()<<endl;    
-            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
-                cout<<i<<endl;
-                //cout<<Shortest_Path_vector[i]<<endl;
-                //cout<<Shortest_Path_vector[i+1]<<endl;
+            
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ )
+
                 nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
-            }
             
-            cout<<"Test Point2"<<endl;
             Shortest_Path_vector.clear();
-            
-            //cout<<"Test Point1"<<endl;
+
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[2] -> name , Odd_Degree_Vertex[3] -> name ) ;
-            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
-            //int rrrr ;
-            //rrrr = Shortest_Path_queue.size() ;
+
             for ( int i = 0 ; i < Shortest_Path_queue.size() ; i++ ) {
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
                 Shortest_Path_queue.push(Shortest_Path_queue.front());
                 Shortest_Path_queue.pop();
             }
-            cout<<Shortest_Path_vector.size()<<endl;  
-            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
-                //cout<<i<<endl;
-                //cout<<Shortest_Path_vector[i]<<endl;
-                //cout<<Shortest_Path_vector[i+1]<<endl;
+
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ )
+
                 nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
-            }
         
         
         }
+
         else if ( ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[2]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[3]->name ) ) <= ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[2]->name , Odd_Degree_Vertex[3]->name ) ) ) && ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[2]->name , Odd_Degree_Vertex[3]->name ) ) < ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[3]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[2]->name ) ) ) ) {
 
-            //cout<<"Test Point1"<<endl;
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[2] -> name ) ;
-            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
-            //int rrrr ;
-            //rrrr = Shortest_Path_queue.size() ;
+
             for ( int i = 0 ; i < Shortest_Path_queue.size() ; i++ ) {
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
                 Shortest_Path_queue.push(Shortest_Path_queue.front());
                 Shortest_Path_queue.pop();
-            }     
-            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
-                //cout<<i<<endl;
-                //cout<<Shortest_Path_vector[i]<<endl;
-                //cout<<Shortest_Path_vector[i+1]<<endl;
+            } 
+            
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ )
+               
                 nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
-            }
             
-            
+
             Shortest_Path_vector.clear();
             
-            //cout<<"Test Point1"<<endl;
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1] -> name , Odd_Degree_Vertex[3] -> name ) ;
-            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
-            //int rrrr ;
-            //rrrr = Shortest_Path_queue.size() ;
+ 
             for ( int i = 0 ; i < Shortest_Path_queue.size() ; i++ ) {
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
                 Shortest_Path_queue.push(Shortest_Path_queue.front());
                 Shortest_Path_queue.pop();
+
             }     
-            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
-                //cout<<i<<endl;
-                //cout<<Shortest_Path_vector[i]<<endl;
-                //cout<<Shortest_Path_vector[i+1]<<endl;
+
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ )
+
                 nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
-            }        
+
         
         }
+        
         else if ( ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[3]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[2]->name ) ) <= ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[2]->name , Odd_Degree_Vertex[3]->name ) ) ) && ( ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[1]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[2]->name , Odd_Degree_Vertex[3]->name ) ) < ( Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0]->name , Odd_Degree_Vertex[2]->name ) + Distance_Getting_By_Breadth_First_Search( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1]->name , Odd_Degree_Vertex[3]->name ) ) ) ) {
-            
-            //cout<<"Test Point1"<<endl;
+
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[0] -> name , Odd_Degree_Vertex[3] -> name ) ;
-            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
-            //int rrrr ;
-            //rrrr = Shortest_Path_queue.size() ;
+            
             for ( int i = 0 ; i < Shortest_Path_queue.size() ; i++ ) {
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
                 Shortest_Path_queue.push(Shortest_Path_queue.front());
                 Shortest_Path_queue.pop();
-            }     
-            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
-                //cout<<i<<endl;
-                //cout<<Shortest_Path_vector[i]<<endl;
-                //cout<<Shortest_Path_vector[i+1]<<endl;
-                nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
             }
+
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ )
+                
+                nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
             
-            
+
             Shortest_Path_vector.clear();
             
-            //cout<<"Test Point1"<<endl;
             Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , Odd_Degree_Vertex[1] -> name , Odd_Degree_Vertex[2] -> name ) ;
-            //Shortest_Path_queue = Shortest_Path_Getting( nm , node_list , Number_Of_Vertex , "b" , "d" ) ;
-            //int rrrr ;
-            //rrrr = Shortest_Path_queue.size() ;
+            
             for ( int i = 0 ; i < Shortest_Path_queue.size() ; i++ ) {
                 
                 Shortest_Path_vector.push_back(Shortest_Path_queue.front());
                 Shortest_Path_queue.push(Shortest_Path_queue.front());
                 Shortest_Path_queue.pop();
-            }     
-            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ ){
-                //cout<<i<<endl;
-                //cout<<Shortest_Path_vector[i]<<endl;
-                //cout<<Shortest_Path_vector[i+1]<<endl;
-                nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
             }
-        
+            
+            for ( int i = 0 ; i < Shortest_Path_vector.size() - 1 ; i++ )
+                
+                nm -> connect( Shortest_Path_vector[i] , Shortest_Path_vector[i+1] ) ;
+            
+
         }
 
     }
 
+    else if(Number_Of_Odd_Degree_Vertex == 6) {
+        
+        cout<<"/////////////////////////////////////////////////////////////////////////////////////////////////////////"<<endl;
+        cout<<"///                                                                                                   ///"<<endl;
+        cout<<"///                                 Please read the file \"README.md\".                                 ///"<<endl;
+        cout<<"///The number of vertex with odd degree is graeter than 4 so this program cna not find the Euler Path.///"<<endl;
+        cout<<"///                                                                                                   ///"<<endl;
+        cout<<"/////////////////////////////////////////////////////////////////////////////////////////////////////////"<<endl;        
+        return 0 ;
+
+    }
 
    
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
     
+    cout<<"ddddddddddddddddddddddddddddddddddddddddd"<<endl;
     
     //Search Euler Path
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
